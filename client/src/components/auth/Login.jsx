@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 export default function Login() {
-  const [email, setEmail] = useState("a.m2002nov@gmail.com");
-  const [password, setPassword] = useState("Ashish123.");
+  const [email, setEmail] = useState("doctor@gmail.com");
+  const [password, setPassword] = useState(
+    "4e53d492-549d-48cd-884a-dc0d75ab84f5"
+  );
 
-  const { authloading, autherror, loginsuccess } = useSelector(
+  const { authloading, autherror, loginsuccess, user } = useSelector(
     (state) => state.authReducers
   );
 
@@ -30,7 +32,8 @@ export default function Login() {
   useEffect(() => {
     if (loginsuccess == true) {
       // redirect to some home page
-      navigate("/patient-dashboard");
+      if (user && user.role == "doctor") navigate("/doctor-dashboard");
+      else if (user && user.role == "patient") navigate("/patient-dashboard");
     }
   }, [loginsuccess]);
 

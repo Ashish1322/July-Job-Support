@@ -31,13 +31,7 @@ router.post(
   signup
 );
 
-router.post(
-  "/login",
-  body("email").exists().isEmail().withMessage("Invalid Email"),
-  body("password").exists().withMessage("Password is required"),
-  validateBodyData,
-  login
-);
+router.post("/login", login);
 
 router.put(
   "/password",

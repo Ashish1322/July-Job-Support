@@ -25,6 +25,7 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log("Login");
   try {
     const { email, password } = req.body;
 
@@ -56,6 +57,7 @@ const login = async (req, res) => {
           state: user?.address?.state || "",
           zip: user?.address?.zip || "",
           token: token,
+          role: user.role,
         };
         return res.status(200).json({ success: true, user: newUserResponse });
       }

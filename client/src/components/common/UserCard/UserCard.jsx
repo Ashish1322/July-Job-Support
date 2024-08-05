@@ -1,10 +1,20 @@
 import React from "react";
 import "./usercard.css";
-export default function UserCard({ name, email, pic, address, bio }) {
+export default function UserCard({
+  name,
+  email,
+  pic,
+  address,
+  bio,
+  department,
+  fetchSlotsOfaDoctor,
+  id,
+  isSlotsButtonRequired = true,
+}) {
   return (
     <div
       style={{ width: "18rem", backgroundColor: "#d5d5d57d" }}
-      className="p-2"
+      className="p-2 m-2"
     >
       <div
         className="no-gutters"
@@ -42,8 +52,22 @@ export default function UserCard({ name, email, pic, address, bio }) {
         </p>
       )}
 
+      {department && (
+        <p className="font-weight-light">
+          {" "}
+          <strong>Department: {department}</strong> {bio}
+        </p>
+      )}
+
       <button className="btn btn-sm btn-primary mx-2">Message</button>
-      <button className="btn btn-sm btn-primary">Book appointment</button>
+      {isSlotsButtonRequired == true && (
+        <button
+          className="btn btn-sm btn-primary"
+          onClick={() => fetchSlotsOfaDoctor(id)}
+        >
+          View Available Slots
+        </button>
+      )}
     </div>
   );
 }

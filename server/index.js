@@ -32,7 +32,7 @@ app.use(
 
 // configure routes
 app.use("/auth", authRoutes);
-app.use("/admin", isLoggedIn, adminRoutes);
+app.use("/admin", isLoggedIn, isAdmin, adminRoutes);
 app.use("/doctor", isLoggedIn, isDoctor, doctorRoutes);
 app.use("/patient", isLoggedIn, isPatient, patientRoutes);
 

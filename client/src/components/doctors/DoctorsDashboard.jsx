@@ -1,17 +1,17 @@
 import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import UpdateProfile from "../common/UpdateProfile/UpdateProfile";
-import DoctorsTab from "./DoctorsTab";
 import { logout } from "../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { HISContext } from "../../HISContext";
-import PatientAppointments from "./PatientAppointments";
-export default function PatientDashboard() {
+import PatientTab from "./PatientsTab";
+import DoctorAppointment from "./DoctorAppointment";
+export default function DoctorsDashboard() {
   const { user } = useSelector((state) => state.authReducers);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { setOption, option } = useContext(HISContext);
-  console.log("Option", option);
+
   return (
     <div>
       <div className="row">
@@ -20,7 +20,7 @@ export default function PatientDashboard() {
           style={{ width: 280, height: "92vh", margin: 0, padding: 0 }}
         >
           <a className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <span className="fs-4">Patient Dashboard</span>
+            <span className="fs-4">Doctor Dashboard</span>
           </a>
           <hr />
           <ul className="nav nav-pills flex-column mb-auto">
@@ -29,9 +29,9 @@ export default function PatientDashboard() {
                 Appointments
               </a>
             </li>
-            <li onClick={() => setOption("doctors")}>
+            <li onClick={() => setOption("patients")}>
               <a className="nav-link text-white" href="#">
-                Doctors
+                Patients
               </a>
             </li>
             <li>
@@ -88,8 +88,8 @@ export default function PatientDashboard() {
         </div>
         <div className="col" style={{ margin: 0, padding: 0 }}>
           {option == "updateprofile" && <UpdateProfile />}
-          {option == "doctors" && <DoctorsTab />}
-          {option == "appointments" && <PatientAppointments />}
+          {option == "patients" && <PatientTab />}
+          {option == "appointments" && <DoctorAppointment />}
           {option == "chats" && <h1>Under Development</h1>}
         </div>
       </div>

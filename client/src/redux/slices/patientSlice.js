@@ -32,7 +32,7 @@ export const filterDoctors = createAsyncThunk(
   "getFilteredDoctors",
   async ({ name, departmentId, token }) => {
     const data = await fetch(
-      `http://localhost:8000/patient/filter-doctors/${name}/${departmentId}`,
+      `http://localhost:8000/patient/filter-doctors?name=${name}&departmentId=${departmentId}`,
       {
         method: "GET",
         headers: {
