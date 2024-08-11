@@ -72,6 +72,7 @@ export default function PatientTab() {
               address={item?.address}
               pic={item.profilePic}
               isSlotsButtonRequired={false}
+              id={item._id}
             />
           </div>
         ))}

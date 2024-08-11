@@ -11,6 +11,7 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 const localizer = momentLocalizer(moment);
 import { toast } from "react-toastify";
+import { BASE_URL } from "../../config";
 export default function DoctorsTab() {
   const { doctors, departments, loading, error } = useSelector(
     (state) => state.patientReducer
@@ -39,7 +40,7 @@ export default function DoctorsTab() {
 
   const [events, setEvents] = useState([]);
   const fetchSlotsOfaDoctor = (doctorId) => {
-    fetch(`http://localhost:8000/patient/doctor-slots/${doctorId}`, {
+    fetch(`${BASE_URL}/patient/doctor-slots/${doctorId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +78,7 @@ export default function DoctorsTab() {
   };
 
   const bookSlot = () => {
-    fetch(`http://localhost:8000/patient/book-slot/${clickedSlot._id}`, {
+    fetch(`${BASE_URL}/patient/book-slot/${clickedSlot._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

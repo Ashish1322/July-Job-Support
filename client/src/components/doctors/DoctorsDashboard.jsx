@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { HISContext } from "../../HISContext";
 import PatientTab from "./PatientsTab";
 import DoctorAppointment from "./DoctorAppointment";
+import Chat from "../chats/Chat";
 export default function DoctorsDashboard() {
   const { user } = useSelector((state) => state.authReducers);
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ export default function DoctorsDashboard() {
           {option == "updateprofile" && <UpdateProfile />}
           {option == "patients" && <PatientTab />}
           {option == "appointments" && <DoctorAppointment />}
-          {option == "chats" && <h1>Under Development</h1>}
+          {option == "chats" && <Chat />}
         </div>
       </div>
     </div>

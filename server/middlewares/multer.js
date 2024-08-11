@@ -18,7 +18,7 @@ export const upload = multer({
   storage: multers3({
     s3: myBucket,
     acl: "public-read",
-    bucket: "mybucket2498",
+    bucket: "aprilfullstack",
     contentType: multers3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
       cb(null, file.originalname);

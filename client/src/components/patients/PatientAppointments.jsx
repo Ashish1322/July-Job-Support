@@ -3,7 +3,8 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useSelector } from "react-redux";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../config";
 const localizer = momentLocalizer(moment);
 
 export default function PatientAppointments() {
@@ -11,7 +12,7 @@ export default function PatientAppointments() {
   const { user } = useSelector((state) => state.authReducers);
   const [clickedSlot, setclickedSlot] = useState(null);
   const fetchAllSlots = (doctorId) => {
-    fetch(`http://localhost:8000/patient/all-slots`, {
+    fetch(`${BASE_URL}/patient/all-slots`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,16 +37,43 @@ export default function PatientAppointments() {
       })
       .catch((err) => toast.error(err.message));
   };
+
   useEffect(() => {
     fetchAllSlots();
   }, []);
   const popupRef = useRef();
+  const closeRef = useRef();
   const handleBookingOfSlot = (data) => {
     // 1. update the slot details i nthe clickedSlot state
     setclickedSlot(data);
     // 2. open the popup and popup will read the data from teh same satate
     popupRef.current.click();
   };
+
+  const navigate = useNavigate();
+  const startVc = (roomId) => {
+    // first close the popup
+    closeRef.current.click();
+    navigate(`/video-call/${roomId}`);
+  };
+
+  function isSameDateAndLaterTime(givenDate) {
+    if (!givenDate) return false;
+    const now = new Date();
+
+    // Check if the year, month, and date are the same
+    const isSameDate =
+      now.getFullYear() === givenDate.getFullYear() &&
+      now.getMonth() === givenDate.getMonth() &&
+      now.getDate() === givenDate.getDate();
+
+    // Check if the current time is later than the given time
+    const isLaterTime = now.getTime() > givenDate.getTime();
+
+    // Return true only if both conditions are met
+    return isSameDate && isLaterTime;
+  }
+
   return (
     <div>
       <Calendar
@@ -141,6 +169,15 @@ export default function PatientAppointments() {
                       {clickedSlot?.openedBy?.email}
                     </p>
                   </div>
+                  <button
+                    disabled={
+                      isSameDateAndLaterTime(clickedSlot?.start) != true
+                    }
+                    onClick={() => startVc(clickedSlot?.roomId)}
+                    class="btn btn-primary"
+                  >
+                    Join Meet
+                  </button>
                 </div>
               </div>
               <div className="modal-footer">
@@ -148,6 +185,7 @@ export default function PatientAppointments() {
                   type="button"
                   className="btn btn-secondary"
                   data-bs-dismiss="modal"
+                  ref={closeRef}
                 >
                   Close
                 </button>

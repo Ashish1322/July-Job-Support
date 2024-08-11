@@ -11,6 +11,7 @@ import {
   uploadImage,
   getUserDetails,
 } from "../controllers/auth.js";
+import { fetchAllMessages } from "../controllers/chat.js";
 // middlewares
 import { isLoggedIn, validateBodyData } from "../middlewares/auth.js";
 import { upload } from "../middlewares/multer.js";
@@ -56,4 +57,5 @@ router.put("/profile", isLoggedIn, updateDetails);
 
 router.get("/details", isLoggedIn, getUserDetails);
 
+router.post("/messages", isLoggedIn, fetchAllMessages);
 export default router;

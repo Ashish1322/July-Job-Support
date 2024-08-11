@@ -58,6 +58,7 @@ const login = async (req, res) => {
           zip: user?.address?.zip || "",
           token: token,
           role: user.role,
+          _id: user._id,
         };
         return res.status(200).json({ success: true, user: newUserResponse });
       }

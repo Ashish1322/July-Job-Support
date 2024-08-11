@@ -2,12 +2,23 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-
+import { Server } from "socket.io";
 // Import routes
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
 import doctorRoutes from "./routes/doctor.js";
 import patientRoutes from "./routes/patient.js";
+// chat
+import { sendMessage } from "./controllers/chat.js";
+
+// connect to s3 bucket
+import aws from "aws-sdk";
+aws.config.update({
+  secretAccessKey: process.env.secretAccessKey,
+  accessKeyId: process.env.accessKeyId,
+  region: process.env.region,
+});
+const myBucket = new aws.S3();
 
 import {
   isAdmin,
@@ -41,7 +52,64 @@ mongoose
   .connect(process.env.DB_URL)
   .then(() => {
     // start app
-    app.listen(PORT, () => console.log("App started on PORT ", PORT));
+    const myapp = app.listen(PORT, () =>
+      console.log("App started on PORT ", PORT)
+    );
+
+    // Create the socket server
+    const io = new Server(myapp, {
+      cors: {
+        origin: ["http://localhost:5173"],
+      },
+    });
+
+    io.on("connection", (socket) => {
+      console.log("Client Connected to socket server", socket.id);
+
+      socket.on("disconnect", () => {
+        console.log("client disconnected ", socket.id);
+      });
+
+      socket.on("send-message", async (payload) => {
+        // once the messae is stored in the db
+        let chat = await sendMessage(
+          payload.sender,
+          payload.receiver,
+          payload.message
+        );
+        console.log(
+          "Messaeg Saved in db now emitting for all the clients",
+          chat
+        );
+        // broadcast this message to all the users who are listening for combinedId
+        io.emit(chat.combinedId, chat);
+      });
+
+      socket.on("send-file", async (payload) => {
+        const sender = payload.sender;
+        const receiver = payload.receiver;
+        const file = payload.file;
+        const filename = payload.filename;
+
+        // 1. upload the file to bucket
+        const params = {
+          Bucket: "aprilfullstack",
+          Key: filename,
+          Body: file,
+        };
+        myBucket.upload(params, async (err, data) => {
+          if (err) {
+            console.log("Failed to upload file", err);
+          } else {
+            const url = data.Location;
+            let chat = await sendMessage(sender, receiver, url, true);
+            console.log(chat);
+            // broadcast this message to all the users who are listening for combinedId
+            io.emit(chat.combinedId, chat);
+          }
+        });
+      });
+    });
   })
   .catch((err) => {
     console.log("Failed to connect to databse");

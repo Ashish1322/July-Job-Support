@@ -5,13 +5,15 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 const localizer = momentLocalizer(moment);
 import { toast } from "react-toastify";
+import { BASE_URL } from "../../config";
+import { useNavigate } from "react-router-dom";
 export default function DoctorAppointment() {
   const buttonRef = useRef();
   const [clickedSlot, setClickedSlot] = useState(null);
   const { user } = useSelector((state) => state.authReducers);
   const [events, setEvents] = useState([]);
   const callOpenSlotAPI = () => {
-    fetch("http://localhost:8000/doctor/open-slot", {
+    fetch(`${BASE_URL}/doctor/open-slot`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +45,7 @@ export default function DoctorAppointment() {
   };
 
   const fetchAllSlots = () => {
-    fetch("http://localhost:8000/doctor/all-slots", {
+    fetch(`${BASE_URL}/doctor/all-slots`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -67,6 +69,7 @@ export default function DoctorAppointment() {
   };
 
   const closeButtonRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllSlots();
@@ -83,17 +86,36 @@ export default function DoctorAppointment() {
     newBtnRef.current.click();
   };
 
+  const startVc = (roomId) => {
+    // first close the popup
+    newcloseRef.current.click();
+    navigate(`/video-call/${roomId}`);
+  };
+
+  function isSameDateAndLaterTime(givenDate) {
+    const now = new Date();
+
+    // Check if the year, month, and date are the same
+    const isSameDate =
+      now.getFullYear() === givenDate.getFullYear() &&
+      now.getMonth() === givenDate.getMonth() &&
+      now.getDate() === givenDate.getDate();
+
+    // Check if the current time is later than the given time
+    const isLaterTime = now.getTime() > givenDate.getTime();
+
+    // Return true only if both conditions are met
+    return isSameDate && isLaterTime;
+  }
+
   const deleteSlot = () => {
-    fetch(
-      `http://localhost:8000/doctor/delete-slot/${currentSelectedEvent._id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: user?.token,
-        },
-      }
-    )
+    fetch(`${BASE_URL}/doctor/delete-slot/${currentSelectedEvent._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user?.token,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         newcloseRef.current.click();
@@ -297,6 +319,16 @@ export default function DoctorAppointment() {
                         {currentSelectedEvent?.bookedBy?.email}
                       </p>
                     </div>
+                    <button
+                      disabled={
+                        isSameDateAndLaterTime(currentSelectedEvent?.start) !=
+                        true
+                      }
+                      onClick={() => startVc(currentSelectedEvent?.roomId)}
+                      class="btn btn-primary"
+                    >
+                      Start Meet
+                    </button>
                   </div>
                 )}
               </div>

@@ -7,6 +7,7 @@ import {
 } from "../../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../../../config";
 export default function UpdateProfile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -68,7 +69,7 @@ export default function UpdateProfile() {
     let data = new FormData();
     data.append("profilepic", file);
 
-    fetch("http://localhost:8000/auth/profile-photo", {
+    fetch(`${BASE_URL}/auth/profile-photo`, {
       method: "POST",
       headers: {
         Authorization: user.token,

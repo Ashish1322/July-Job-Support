@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { HISContext } from "../../../HISContext";
 import "./usercard.css";
 export default function UserCard({
   name,
@@ -11,6 +12,14 @@ export default function UserCard({
   id,
   isSlotsButtonRequired = true,
 }) {
+  const { setOption, setReceiver } = useContext(HISContext);
+
+  const redirectToChattingScreen = () => {
+    // set the receiver
+    setReceiver(id);
+    // redirect to the chat screen
+    setOption("chats");
+  };
   return (
     <div
       style={{ width: "18rem", backgroundColor: "#d5d5d57d" }}
@@ -59,7 +68,12 @@ export default function UserCard({
         </p>
       )}
 
-      <button className="btn btn-sm btn-primary mx-2">Message</button>
+      <button
+        onClick={redirectToChattingScreen}
+        className="btn btn-sm btn-primary mx-2"
+      >
+        Message
+      </button>
       {isSlotsButtonRequired == true && (
         <button
           className="btn btn-sm btn-primary"

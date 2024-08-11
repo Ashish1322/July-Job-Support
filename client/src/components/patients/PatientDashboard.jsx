@@ -6,6 +6,7 @@ import { logout } from "../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { HISContext } from "../../HISContext";
 import PatientAppointments from "./PatientAppointments";
+import Chat from "../chats/Chat";
 export default function PatientDashboard() {
   const { user } = useSelector((state) => state.authReducers);
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ export default function PatientDashboard() {
           {option == "updateprofile" && <UpdateProfile />}
           {option == "doctors" && <DoctorsTab />}
           {option == "appointments" && <PatientAppointments />}
-          {option == "chats" && <h1>Under Development</h1>}
+          {option == "chats" && <Chat />}
         </div>
       </div>
     </div>

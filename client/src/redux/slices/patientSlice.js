@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
+import { BASE_URL } from "../../config";
 export const getAllDoctorsAction = createAsyncThunk(
   "getAllDoctors",
   async ({ token }) => {
-    const data = await fetch("http://localhost:8000/patient/all-doctors", {
+    const data = await fetch(`${BASE_URL}/patient/all-doctors`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -17,7 +17,7 @@ export const getAllDoctorsAction = createAsyncThunk(
 export const getAllDepartmentsAction = createAsyncThunk(
   "getAllDepartments",
   async ({ token }) => {
-    const data = await fetch("http://localhost:8000/patient/all-departments", {
+    const data = await fetch(`${BASE_URL}/patient/all-departments`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export const filterDoctors = createAsyncThunk(
   "getFilteredDoctors",
   async ({ name, departmentId, token }) => {
     const data = await fetch(
-      `http://localhost:8000/patient/filter-doctors?name=${name}&departmentId=${departmentId}`,
+      `${BASE_URL}/patient/filter-doctors?name=${name}&departmentId=${departmentId}`,
       {
         method: "GET",
         headers: {
