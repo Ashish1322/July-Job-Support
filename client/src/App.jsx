@@ -16,6 +16,8 @@ import socket from "./socket";
 import VideoCall from "./components/common/VideoCall";
 import LoginWrapper from "./components/auth/LogginWrapper";
 import { BASE_URL } from "./config";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import AdminProtectedWrapper from "./components/auth/AdminProtectedWrapper";
 function App() {
   const [option, setOption] = useState("updateprofile");
   const { user } = useSelector((state) => state.authReducers);
@@ -200,6 +202,14 @@ function App() {
               <LoginWrapper>
                 <VideoCall />
               </LoginWrapper>
+            }
+          />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <AdminProtectedWrapper>
+                <AdminDashboard />
+              </AdminProtectedWrapper>
             }
           />
         </Routes>

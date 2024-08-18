@@ -1,9 +1,12 @@
 doctor:
 email: doctor@gmail.com
-password: 4e53d492-549d-48cd-884a-dc0d75ab84f5
+password: 7ea89815-97ea-4ca2-a8f8-58e7a25249e9
 
 patient:
 email: a.m2002nov@gmail.com 
 pass: Ashish123.
 
 
+Admin:
+"email": mainadmin@gmail.com
+"password": Ashish123.
